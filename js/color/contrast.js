@@ -197,3 +197,17 @@ export function min_positive_ratio(ratios, algorithm) {
   const f = is_positive_ratio(algorithm)
   return min(ratios.filter(f))
 }
+
+/**
+ * 
+ * @param {[r: number, g: number, b: number]} color 
+ * @param {ContrastAlgorithm} [algorithm='wcag3']
+ * @returns {number}
+ */
+export function luminance(color, algorithm = 'wcag3') {
+  switch (algorithm) {
+    case 'wcag2': { return wcag2_relative_luminance(...color.map(normalize)) }
+    case 'wcag3': { return srgb_to_y(color) }
+    default: throw new Error(`unrecognized algorithm`)
+  }
+}
