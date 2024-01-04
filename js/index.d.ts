@@ -26,6 +26,11 @@ export type ContrastAlgorithm =
     | "wcag2"
     | "wcag3"
 
+type LightnessDistribution = 
+    | 'linear'
+    | 'polynomial'
+    | 'parabola'
+
 type Ratios = number[] | Record<string, number>
 
 export class Color {
@@ -126,3 +131,34 @@ export type OutputColor = {
 export type OutputBackgroundColor = {
     background: string
 }
+
+export function contrast(
+    color: [r255: number, g255: number, b255: number],
+    base: [r255: number, g255: number, b255: number],
+    base_v?: number | undefined,
+    algorithm?: ContrastAlgorithm,
+): number
+
+export function luminance(color: [r255: number, g255: number, b255: number], algorithm?: ContrastAlgorithm): number
+
+export function ratio_names(ratios: number[], algorithm: ContrastAlgorithm): string[]
+
+export function is_positive_ratio(algorithm: ContrastAlgorithm): (r: number) => boolean
+
+export function min_positive_ratio(ratios: number[], algorithm: ContrastAlgorithm): number
+
+export function fmt_color(color: string, output_format: ColorSpace): string
+
+export function color_scale<AsFn extends boolean = false>(
+    granularity: number,
+    key_colors: string[],
+    color_space: InterpolationColorSpace,
+    opts?: {
+        shift?: number
+        full_scale?: boolean
+        smooth?: boolean
+        distribute_lightness?: LightnessDistribution
+        sort_color?: boolean
+        as_fn?: AsFn
+    }
+): AsFn extends false ? string[] : (d: number) => import('chroma-js').Color
