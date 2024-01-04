@@ -1,0 +1,43 @@
+{
+  "name": "adaptive-colors",
+  "version": "0.0.0",
+  "description": "",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/duanwilliam/adaptive-colors/tree/main/js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/duanwilliam/adaptive-colors",
+    "directory": "js"
+  },
+  "bugs": {
+    "url": "https://github.com/duanwilliam/adaptive-colors/issues"
+  },
+  "type": "module",
+  "types": "index.d.ts",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "dependencies": {
+    "apca-w3": "^0.1.9",
+    "chroma-js": "^2.4.2",
+    "ciebase": "^0.1.1",
+    "ciecam02": "^0.4.6",
+    "hsluv": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "**/*.js",
+    "index.d.ts"
+  ],
+  "keywords": [
+    "adaptive colors",
+    "color palette",
+    "palette generation"
+  ]
+}
