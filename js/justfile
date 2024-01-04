@@ -1,0 +1,23 @@
+@_:
+    just --list
+
+@version newversion="patch":
+    @npm version {{newversion}}
+
+    # commit version update
+    git add package.json
+    git commit --allow-empty -m "{{'release(js): ' + `just get-version`}}"
+
+    # tag commit
+    git tag `just get-version`
+
+@publish:
+    @npm publish --dry-run
+
+@publish-like-actually-for-real version:
+    @npm publish
+    git push --atomic origin main {{version}}
+
+[private]
+@get-version:
+    jq -r ".version" < "{{justfile_directory()}}/package.json"
