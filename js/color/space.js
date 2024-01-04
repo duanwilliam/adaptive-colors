@@ -32,3 +32,36 @@ export const COLOR_SPACES = /**@type{const}*/({
   "oklab":  'oklab',
   "oklch":  'oklch',
 })
+
+
+/**
+ * @type {<O, const Ks extends string[]>(o: O, ks: Ks) => Pick<O, Ks[number]>}
+ */
+function pick(o, ks) {
+  return ks.reduce((a, c) => {
+    a[c] = o[c]
+    return a
+  }, {})
+}
+
+/**
+ * @typedef {Extract<ColorSpace,
+ *  | 'cam02'
+ *  | 'lab'
+ *  | 'hsl'
+ *  | 'hsluv'
+ *  | 'rgb'
+ * >} InterpolationColorSpace
+ */
+
+export const INTERPOLATION_COLOR_SPACES = pick(COLOR_SPACES, [
+  'cam02',
+  'cam02p',
+  'rgb',
+  'hsl',
+  'hsluv',
+  'lab',
+  'lch',
+  'oklab',
+  'oklch',
+])

@@ -99,6 +99,7 @@ export function color_scale(granularity, key_colors, color_space, {
           )),
           xs => smooth_scale(xs, domains, space),
         )
+      // TODO: this no work on spaces unsupported by chroma (e.g. jch, jab, hsluv)
       : xs => chroma
         .scale(xs.map(color => color instanceof chroma.Color ? color : String(color)))
         .domain(domains)

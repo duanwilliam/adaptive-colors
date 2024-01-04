@@ -11,7 +11,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { round } from './math/math.js'
+import { between, round } from './math/math.js'
 import { assert } from './utils/assert.js'
 import { pipe } from './utils/fn.js'
 import { CONTRAST_ALGORITHMS, multiply_contrast_ratio, ratio_names } from './color/contrast.js'
@@ -55,35 +55,40 @@ export class Theme {
   #_output = null
 
   /**
+   * define a theme with the specified parameters
+   * 
+   * ```text
+   * param            | type                    | default     | description
+   * ----------------------------------------------------------------------
+   * colors           | Color[]                 | <required>  | theme colors
+   * background_color | hex_string | color      | <required>  | the key colors to create a color scale through
+   * lightness        | number: [0, 100]        | 100         | background color lightness for theme
+   * contrast         | number                  | 1           | contrast multiplier for all theme colors 
+   * saturation       | null | number: [0, 100] | null        | how much to desaturate all theme colors (100 = default saturation; null = don't apply desaturation at all)
+   * algorithm        | ContrastAlgorithm       | "wcag3"     | color contrast algorithm
+   * output_format    | ColorSpace              | "rgb"       | color space to output palette colors to 
+   * ```
+   * 
    * 
    * @param {{
    *  colors: import('./color/color.js').Color[]
    *  background_color: import('./color/color.js').Color | string
    *  lightness?: number
    *  contrast?: number
-   *  saturation?: number
+   *  saturation?: number | null
    *  algorithm?: import('./color/contrast.js').ContrastAlgorithm
    *  output_format?: import('./color/space.js').ColorSpace
    * }} opts 
    */
   constructor(opts) {
-    const { colors, background_color, lightness = 100, contrast = 1, saturation, algorithm = 'wcag3', output_format = 'rgb' } = opts
-    assert(colors, `no colors defined`)
-    assert(Array.isArray(colors), `colors should be an array of Color instance`)
-    colors.forEach(color => {
-      assert(color instanceof Color, `colors contains elements not Color instances`)
-      assert(color.ratios, `color ${color.name}'s ratios are not defined`)
-    })
-    assert(background_color, `no background color defined`)
-    assert(CONTRAST_ALGORITHMS.has(algorithm), `contrast algorithm "${algorithm}" not supported`)
-    assert(COLOR_SPACES.hasOwnProperty(opts.output_format), `output format "${opts.output_format}" not supported`)
+    const { colors, background_color, lightness = 100, contrast = 1, saturation = null, algorithm = 'wcag3', output_format = 'rgb' } = opts
     
-    this.#set_colors(colors)
-    this.#set_lightness(lightness)
-    this.#set_contrast(contrast)
-    if (opts.hasOwnProperty('saturation')) { this.with_saturation(saturation) }
-    this.#set_algorithm(algorithm)
-    this.#set_output_format(output_format)
+    this.with_colors(colors)
+    this.with_lightness(lightness)
+    this.with_contrast(contrast)
+    this.with_saturation(saturation)
+    this.with_algorithm(algorithm)
+    this.with_output_format(output_format)
     this.with_background_color(background_color)
   }
 
@@ -97,12 +102,27 @@ export class Theme {
   get background_color_value() { return this.#get_background_color_value() }
 
   /** @param {import('./color/color.js').Color[]} colors */
-  with_colors(colors) { this.#set_colors(colors); return this }
+  with_colors(colors) {
+    assert(colors, `no colors defined`)
+    assert(Array.isArray(colors), `colors should be an array of Color instance`)
+    colors.forEach(color => {
+      assert(color instanceof Color, `colors contains elements not Color instances`)
+      assert(color.ratios, `color ${color.name}'s ratios are not defined`)
+    })
+
+    this.#set_colors(colors)
+    return this
+  }
 
   /** @param {import('./color/color.js').Color | string} background_color */
   with_background_color(background_color) {
+    assert(background_color, `no background color defined`)
+    assert(typeof background_color === 'string' || background_color instanceof Color, `background color is not a Color or string`)
+
     // If it's a string, convert to Color object and assign lightness.  
     if (typeof background_color === 'string') {
+      assert(chroma.valid(background_color), `unrecognized background color string "${background_color}"`)
+
       this.#set_background_color(new Color({ name: 'background', colorKeys: [background_color], output: 'rgb' }))
       this.#set_lightness(round(to.hsluv(chroma(background_color))[2]))
     } else {
@@ -113,25 +133,44 @@ export class Theme {
   }
 
   /** @param {number} lightness */
-  with_lightness(lightness) { this.#set_lightness(lightness); return this }
+  with_lightness(lightness) {
+    assert(typeof lightness === 'number' && between(0, lightness, 100), `lightness should be a number between 0 and 100`)
+    this.#set_lightness(lightness)
+    return this
+  }
 
   /** @param {number} contrast */
-  with_contrast(contrast) { this.#set_contrast(contrast); return this }
+  with_contrast(contrast) {
+    assert(typeof contrast === 'number', `contrast should be a number`)
 
-  /** @param {number} saturation */
+    this.#set_contrast(contrast)
+    return this
+  }
+
+  /** @param {number | null} saturation */
   with_saturation(saturation) {
-    if (saturation !== this.#saturation) {
-      this.#saturation = saturation
-      this.#set_colors(map(color => color.with_saturation(saturation)))
-    }
+    assert(saturation === null || typeof saturation === 'number' && between(0, saturation, 100), `saturation should either be null or a number between 0 and 100`)
+
+    this.#saturation = saturation
+    this.#set_colors(map(color => color.with_saturation(saturation)))
     return this
   }
 
   /** @param {import('./color/contrast.js').ContrastAlgorithm} algorithm */
-  with_algorithm(algorithm) { this.#set_algorithm(algorithm); return this }
+  with_algorithm(algorithm) {
+    assert(CONTRAST_ALGORITHMS.has(algorithm), `contrast algorithm "${algorithm}" not supported`)
+
+    this.#set_algorithm(algorithm)
+    return this
+  }
 
   /** @param {import('./color/space.js').ColorSpace} fmt */
-  with_output_format(fmt) { this.#set_output_format(fmt); return this }
+  with_output_format(fmt) {
+    assert(COLOR_SPACES.hasOwnProperty(fmt), `output format "${fmt}" not supported`)
+
+    this.#set_output_format(fmt)
+    return this
+  }
 
   /**
    * get the color palette given the current theme configuration,
@@ -177,9 +216,7 @@ export class Theme {
       }))
     
     const base_obj = { background: formatted_bg_color_value }
-    /** @type {[OutputBackgroundColor, ...OutputColor[]]} */
     const output_colors = [base_obj, ...palette_colors]
-    /** @type {Record<string, string>} */
     const output_color_pairs = { ...base_obj, ...Object.fromEntries(unflatted_palette_color_pairs.flat()) }
     const output_color_values = unflattened_palette_color_values.flat()
 

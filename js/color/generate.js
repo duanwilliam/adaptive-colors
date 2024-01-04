@@ -49,12 +49,12 @@ export function generate_colors(color, bg_rgb_arr, base_v, ratio_values, contras
   const first = contrast_at(0)
   const last = contrast_at(granularity)
   const dir = first < last ? 1 : -1
-  const eps = 0.01 // ? adobe magic
+  const eps = 0.01
 
   /** @type {(ratio: number) => number} */
   function search(ratio) {
     // nudge up target ratio by tiny amount
-    const x = ratio + 0.005 * Math.sign(ratio) // ? adobe magic
+    const x = ratio + 0.005 * Math.sign(ratio)
 
     let step = granularity / 2
     let dot = step

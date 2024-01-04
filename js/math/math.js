@@ -42,3 +42,15 @@ export const ge = n => x => x >= n
 export const lt = n => x => x < n
 /** @type {(n: number) => (x: number) => boolean} */
 export const le = n => x => x <= n
+
+/**
+ * checks if x is between l and h, inclusive
+ * 
+ * @param {number} l 
+ * @param {number} x 
+ * @param {number} h 
+ * @returns {boolean}
+ */
+export function between(l, x, h) {
+  return l <= x && x <= h
+} 

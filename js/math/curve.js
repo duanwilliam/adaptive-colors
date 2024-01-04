@@ -84,9 +84,6 @@ export function prepare_curve(curve) {
     const t = i / len
     const [x, y] = point_at(curve, t)
     const ind = Math.round(x)
-    // we'll aggregate all y values for x that rounds to ind, and average that in the end.
-    // adobe just overrides (lookup[ind] = y), which is mostly fine (they're usually pretty close together anyway),
-    // but heck why not try to average it out a bit 
     // multiple points may round to the same x.
     // overriding here is fine because they're usually pretty close together anyway
     lookup[ind] = y
@@ -100,8 +97,7 @@ export function prepare_curve(curve) {
     prev_ind = ind
   }
   // some x values may have null.
-  // in this case, adobe iterates through to find the first non-null value
-  //  (which is done in `smoothScale`, which calls this).
+  // adobe's algorithm iterates through to find the first non-null value in `smoothScale`.
   // we'll just do that right now, replacing `null` with the first non-null value after it
   for (let i=lookup.length - 1; i; --i) {
     if (lookup[i-1] === null && lookup[i] !== null) { lookup[i-1] = lookup[i] }
