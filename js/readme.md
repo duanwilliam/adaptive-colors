@@ -17,7 +17,7 @@ npm i adaptive-colors
 
 this section's code examples are adapted from Adobe Leonardo's readme
 
-```
+```js
 import { Color, Theme } from "adaptive-colors";
 
 const grey = new Color({
