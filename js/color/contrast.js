@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 
 import { APCAcontrast as apca_contrast, sRGBtoY as srgb_to_y } from 'apca-w3'
 
-import { ge, min, round } from '../math/math.js'
+import { min, round } from '../math/math.js'
 import { assert } from '../utils/assert.js'
 import { numeric, range } from '../utils/iter.js'
 import { to } from './chroma.js'
@@ -94,12 +94,12 @@ function wcag3_contrast(color, base, dark_mode) {
  * 
  * @param {[r: number, g: number, b: number]} color 
  * @param {[r: number, g: number, b: number]} base 
- * @param {number} base_v 
+ * @param {number | undefined} base_v 
  * @param {ContrastAlgorithm} [algorithm='wcag3'] 
  */
 export function contrast(color, base, base_v, algorithm = 'wcag3') {
-  // ? adobe
-  if (base_v === undefined) { // If base is an array and base_v undefined
+   // If base is an array and base_v undefined
+  if (base_v === undefined) {
     const base_lightness = to.hsluv(chroma.rgb(...base))[2]
     base_v = round(base_lightness / 100, 2)
   }
@@ -145,7 +145,7 @@ export function ratio_names(ratios, algorithm) {
 
   ratios = ratios.sort(numeric)
 
-  const min = min_positive(ratios, algorithm)
+  const min = min_positive_ratio(ratios, algorithm)
   const min_i = ratios.indexOf(min)
 
   const n_neg = min_i
@@ -172,8 +172,28 @@ const MIN_RATIO = {
   wcag3: 1,
 }
 
-function min_positive(r, algorithm) {
-  assert(r, `ratios array is undefined`)
-  assert(Array.isArray(r), `ratios is not an array`)
-  return min(r.filter(ge(MIN_RATIO[algorithm])))
+/**
+ * given a contrast algorithm,
+ * returns a function that determines whether or not a given ratio is "positive"
+ *  wrt that contrast algorithm
+ * @param {ContrastAlgorithm} algorithm 
+ * @returns {(r: number) => boolean}
+ */
+export function is_positive_ratio(algorithm) {
+  const m = MIN_RATIO[algorithm]
+  return r => r >= m
+}
+
+/**
+ * finds the smallest "positive" ratio in a list of ratios,
+ *  as defined by what constitutes a positive ratio for the contrast algorithm used
+ * @param {number[]} ratios 
+ * @param {ContrastAlgorithm} algorithm 
+ * @returns {number}
+ */
+export function min_positive_ratio(ratios, algorithm) {
+  assert(ratios, `ratios array is undefined`)
+  assert(Array.isArray(ratios), `ratios is not an array`)
+  const f = is_positive_ratio(algorithm)
+  return min(ratios.filter(f))
 }
