@@ -134,7 +134,7 @@ export class Theme {
   with_output_format(fmt) { this.#set_output_format(fmt); return this }
 
   /**
-   * get the contrast colors given the current theme configuration,
+   * get the color palette given the current theme configuration,
    * in the specified color space (or the theme's specified color space, if not defined).
    * 
    * @param {import('./color/space.js').ColorSpace} [output_format]
@@ -145,13 +145,13 @@ export class Theme {
    *  color_values: string[]
    * }}
    */
-  get_contrast_colors(output_format) {
+  palette(output_format) {
     if (this.#_output !== null) { return this.#_output }
     const bg_rgb_arr = chroma(this.#get_background_color_value()).rgb()
     const base_v = this.#lightness / 100
     const formatted_bg_color_value = fmt_color(this.#get_background_color_value(), this.#output_format)
   
-    const [contrast_colors, unflattened_contrast_color_pairs, unflattened_contrast_color_values] =
+    const [palette_colors, unflatted_palette_color_pairs, unflattened_palette_color_values] =
       unzip(this.#colors.map(color => {
         const name = color.name.replace(whitespace_re, '')
   
@@ -178,10 +178,10 @@ export class Theme {
     
     const base_obj = { background: formatted_bg_color_value }
     /** @type {[OutputBackgroundColor, ...OutputColor[]]} */
-    const output_colors = [base_obj, ...contrast_colors]
+    const output_colors = [base_obj, ...palette_colors]
     /** @type {Record<string, string>} */
-    const output_color_pairs = { ...base_obj, ...Object.fromEntries(unflattened_contrast_color_pairs.flat()) }
-    const output_color_values = unflattened_contrast_color_values.flat()
+    const output_color_pairs = { ...base_obj, ...Object.fromEntries(unflatted_palette_color_pairs.flat()) }
+    const output_color_values = unflattened_palette_color_values.flat()
 
     this.#_output = { colors: output_colors, color_pairs: output_color_pairs, color_values: output_color_values }
     return this.#_output

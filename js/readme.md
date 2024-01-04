@@ -66,7 +66,7 @@ colors  - theme colors as json
 pairs   - theme colors as flat key:value map
 values  - theme colors as list
 */
-const { colors, pairs, values } = theme.get_contrast_colors()
+const { colors, pairs, values } = theme.palette()
 ```
 
 ### supported output formats
