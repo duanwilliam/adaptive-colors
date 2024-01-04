@@ -54,6 +54,8 @@ export class Color {
     with_smooth(smooth: boolean): this
     with_saturation(saturation?: number | null): this
 
+    get_color_scale(granularity?: number): (d: number) => import('chroma-js').Color
+
     to_object(): {
         name: string
         key_colors: string[]

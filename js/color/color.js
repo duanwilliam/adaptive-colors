@@ -11,11 +11,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { INTERPOLATION_COLOR_SPACES } from './space.js'
 import { between } from '../math/math.js'
 import { assert } from '../utils/assert.js'
-import { chroma, from, to } from './chroma.js'
 import { pipe } from '../utils/fn.js'
+import { chroma, from, to } from './chroma.js'
+import { color_scale } from './scale.js'
+import { INTERPOLATION_COLOR_SPACES } from './space.js'
 
 export class Color {
   /** @type {string} */
@@ -33,6 +34,9 @@ export class Color {
 
   /** @type {string[]} */
   #resolved_key_colors
+
+  /** @type {null | ((d: number) => import('chroma-js').Color)} */
+  #color_scale = null
 
   /**
    * define a color with the specified parameters
@@ -102,6 +106,7 @@ export class Color {
 
     this.#key_colors = key_colors
     this.#resolved_key_colors = saturate(this.#key_colors, this.#saturation)
+    this.#_invalidate_color_scale()
     return this
   }
 
@@ -110,6 +115,7 @@ export class Color {
     assert(INTERPOLATION_COLOR_SPACES.hasOwnProperty(color_space), `color space ${color_space} not supported`)
 
     this.#color_space = color_space
+    this.#_invalidate_color_scale()
     return this
   }
 
@@ -122,7 +128,11 @@ export class Color {
   }
 
   /** @param {boolean} smooth  */
-  with_smooth(smooth) { this.#smooth = !!smooth; return this }
+  with_smooth(smooth) {
+    this.#smooth = !!smooth
+    this.#_invalidate_color_scale()
+    return this
+  }
 
   /** @param {number | null} saturation  */
   with_saturation(saturation) {
@@ -130,8 +140,20 @@ export class Color {
 
     this.#saturation = saturation
     this.#resolved_key_colors = saturate(this.#key_colors, this.#saturation)
+    this.#_invalidate_color_scale()
     return this
   }  
+
+  get_color_scale(granularity = 3000) {
+    if (this.#color_scale !== null) { return this.#color_scale }
+    const scale = color_scale(granularity, this.#resolved_key_colors, this.#color_space, {
+      shift: 1,
+      smooth: this.#smooth,
+      as_fn: true,
+    })
+    this.#color_scale = scale
+    return scale
+  }
 
   to_object() {
     return {
@@ -144,6 +166,9 @@ export class Color {
     }
   }
 
+  #_invalidate_color_scale() {
+    this.#color_scale = null
+  }
 }
 
 /**

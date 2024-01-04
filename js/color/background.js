@@ -21,7 +21,7 @@ import { color_scale } from './scale.js'
  * generates a scale of background color values as `output_format`-formatted css strings 
  * 
  * @param {import('./color.js').Color} color 
- * @param {import('./space.js').ColorSpace} output_format
+ * @param {import('./space.js').InterpolationColorSpace} output_format
  * @returns {string[]}
  */
 export function create_background_color_scale(color, output_format) {

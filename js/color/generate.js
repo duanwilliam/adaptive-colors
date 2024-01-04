@@ -28,11 +28,7 @@ import { to } from './chroma.js'
  * @returns {import('chroma-js').Color[]}
  */
 export function generate_colors(color, bg_rgb_arr, base_v, ratio_values, contrast_algorithm, granularity = 3000) {
-  const scale = color_scale(granularity, color.resolved_key_colors, color.color_space, {
-    shift: 1,
-    smooth: color.smooth,
-    as_fn: true,
-  })
+  const scale = color.get_color_scale(granularity)
 
   /** @type {Map<number, number>} */
   const cache = new Map()

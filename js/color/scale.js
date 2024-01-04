@@ -36,7 +36,7 @@ const LIGHTNESS_DISTRIBUTIONS = {
  * @template {boolean} [AsFn=false]
  * @param {number} granularity 
  * @param {string[]} key_colors 
- * @param {import('./space.js').ColorSpace} color_space 
+ * @param {import('./space.js').InterpolationColorSpace} color_space 
  * @param {{
  *  shift?: number,
  *  full_scale?: boolean,
