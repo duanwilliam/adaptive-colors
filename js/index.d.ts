@@ -93,7 +93,7 @@ export class Theme {
     with_algorithm(algorithm: ContrastAlgorithm): this
     with_output_format(fmt: ColorSpace): this
 
-    get_contrast_colors(output_format?: ColorSpace): {
+    palette(output_format?: ColorSpace): {
         colors: [OutputBackgroundColor, ...OutputColor[]]
         color_pairs: Record<string, string>
         color_values: string[]
