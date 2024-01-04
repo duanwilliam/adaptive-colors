@@ -25,8 +25,16 @@ importers:
       hsluv:
         specifier: ^1.0.1
         version: 1.0.1
+    devDependencies:
+      '@types/chroma-js':
+        specifier: ^2.4.3
+        version: 2.4.3
 
 packages:
+
+  /@types/chroma-js@2.4.3:
+    resolution: {integrity: sha512-1ly5ly/7S/YF8aD7MxUQnFOZxdegimuOunJl0xDsLlguu5JrwuSTVGVH3UpIUlh6YauI0RMNT4cqjBonhgbdIQ==}
+    dev: true
 
   /apca-w3@0.1.9:
     resolution: {integrity: sha512-Zrf6AeBeQjNe/fxK7U1jCo5zfdjDl6T4/kdw5Xlky3G7u+EJTZkyItjMYQGtwf9pkftsINxcYyOpuLkzKf1ITQ==}
