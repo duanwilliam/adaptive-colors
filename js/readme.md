@@ -57,8 +57,7 @@ const red = new Color({
 
 const theme = new Theme({
     colors: [gray, blue, red],
-    backgroundColor: gray,
-    lightness: 97
+    background_color: gray,
 });
 
 /*
