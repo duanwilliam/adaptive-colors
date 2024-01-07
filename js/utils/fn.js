@@ -35,6 +35,9 @@ export const pack = f => (...xs) => f(xs)
  */
 export const unpack = f => x => f(...x)
 
+/** @type {<T>(x: T) => T} */
+export const debug = x => (console.log(x), x)
+
 /**
  * 
  * @type {<
