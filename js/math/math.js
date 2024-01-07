@@ -54,3 +54,9 @@ export const le = n => x => x <= n
 export function between(l, x, h) {
   return l <= x && x <= h
 } 
+
+/** @type {(min: number, max: number) => (x: number) => number} */
+export const clamp = (min, max) => x => Math.min(max, Math.max(min, x))
+
+/** @type {(a: number, b: number, t: number) => number} */
+export const lerp = (a, b, t) => a + t * (b - a)
