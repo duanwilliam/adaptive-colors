@@ -14,6 +14,28 @@
 export const pipe = (...fs) => x => fs.reduce((n, f) => f(n), x)
 
 /**
+ * pack spread arguments into a single array argument for function `f`
+ * 
+ * @type {<
+ *  T extends any[],
+ *  F extends (arg: T) => any,
+ *  O extends (F extends (_: any) => infer R ? R : never)
+ * >(f: F) => (...args: T) => O}
+ */
+export const pack = f => (...xs) => f(xs)
+
+/**
+ * unpack single array arguments into spread arguments for function `f`
+ * 
+ * @type {<
+ *  T extends any[],
+ *  F extends (...args: T) => any,
+ *  O extends (F extends (..._: any) => infer R ? R : never)
+ * >(f: F) => (x: T) => O}
+ */
+export const unpack = f => x => f(...x)
+
+/**
  * 
  * @type {<
  *  const Fs extends Fn1[],
