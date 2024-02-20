@@ -23,7 +23,7 @@ import { map, unzip, zip } from './utils/iter.js'
 import { COLOR_SPACES } from './color/space.js'
 import { chroma, to } from './color/chroma.js'
 
-const whitespace_re = /s+/g
+const whitespace_re = /\s+/g
 
 export class Theme {
   /** @type {import('./color/color.js').Color[]} */
