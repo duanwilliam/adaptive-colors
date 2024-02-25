@@ -190,7 +190,7 @@ export class Theme {
     const base_v = this.#lightness / 100
     const formatted_bg_color_value = fmt_color(this.#get_background_color_value(), this.#output_format)
   
-    const [palette_colors, unflatted_palette_color_pairs, unflattened_palette_color_values] =
+    const [palette_colors, unflattened_palette_color_pairs, unflattened_palette_color_values] =
       unzip(this.#colors.map(color => {
         const name = color.name.replace(whitespace_re, '')
   
@@ -217,7 +217,7 @@ export class Theme {
     
     const base_obj = { background: formatted_bg_color_value }
     const output_colors = [base_obj, ...palette_colors]
-    const output_color_pairs = { ...base_obj, ...Object.fromEntries(unflatted_palette_color_pairs.flat()) }
+    const output_color_pairs = { ...base_obj, ...Object.fromEntries(unflattened_palette_color_pairs.flat()) }
     const output_color_values = unflattened_palette_color_values.flat()
 
     this.#_output = { colors: output_colors, color_pairs: output_color_pairs, color_values: output_color_values }
