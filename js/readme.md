@@ -68,7 +68,27 @@ values  - theme colors as list
 const { colors, pairs, values } = theme.palette()
 ```
 
-### supported output formats
+### interpolation color spaces
+
+colors can be interpolated along a variety of possible color spaces
+
+| color space | description                                |
+| ----------- | ------------------------------------------ |
+| `'rgb'`     | rgb color space                            |
+| `'hsl'`     | hsl representation in rgb color space      |
+| `'hsv'`     | hsv representation in rgb color space      |
+| `'hsluv'`   | hsluv color space                          |
+| `'lab'`     | cielab color space                         |
+| `'lch'`     | polar representation in cielab color space |
+| `'oklab'`   | oklab color space                          |
+| `'oklch'`   | polar representation in oklab color space  |
+| `'cam02'`   | ciecam02-ucs color appearance model        |
+| `'cam02p'`  | ciecam02 color appearance model            |
+| `'cam16'`   | ciecam16-ucs color appearance model        |
+| `'cam16p'`  | ciecam16 color appearance model            |
+| `'hct'`     | hct color space                            |
+
+### output formats
 
 _this section is adapted from but taken nearly verbatim from Adobe Leonardo's readme_
 
@@ -79,11 +99,7 @@ available output formats conform to the [W3C CSS Color Module Level 4]((https://
 | `'hex'`             | `#RRGGBB`                |
 | `'rgb'` _(default)_ | `rgb(255, 255, 255)`     |
 | `'hsl'`             | `hsl(360deg, 0%, 100%)`  |
-| `'hsv'`             | `hsv(360deg, 0%, 100%)`  |
-| `'hsluv'`           | `hsluv(360, 0, 100)`     |
 | `'lab'`             | `lab(100%, 0, 0)`        |
 | `'lch'`             | `lch(100%, 0, 360deg)`   |
 | `'oklab'`           | `oklab(100%, 0, 0)`      |
 | `'oklch'`           | `oklch(100%, 0, 360deg)` |
-| `'cam02'`           | `jab(100%, 0, 0)`        |
-| `'cam02p'`          | `jch(100%, 0, 360deg)`   |

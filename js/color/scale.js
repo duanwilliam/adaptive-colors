@@ -33,6 +33,28 @@ const LIGHTNESS_DISTRIBUTIONS = {
 }
 
 /**
+ * color spaces that, if `color_scale` should use a full scale,
+ *  adds white and black as `chroma.Color`s to the key colors,
+ *  rather than as hex strings.
+ * honestly no idea why (the other key colors are all hex strings),
+ *  but it's in the original leonardo code \shrug
+ * 
+ * @type {Set<import('./space.js').InternalColorSpace>}
+ */
+const FULL_SCALE_SPACES = new Set([
+  'lch',
+  'oklch',
+])
+
+/**
+ * @type {Set<import('./space.js').InternalColorSpace>}
+ */
+const JCH_COLOR_SPACES = new Set([
+  'cam02jch',
+  'cam16jch',
+])
+
+/**
  * @template {boolean} [AsFn=false]
  * @param {number} granularity 
  * @param {string[]} key_colors 
@@ -73,13 +95,13 @@ export function color_scale(granularity, key_colors, color_space, {
       : id,
     full_scale
       ? xs => [
-          // thought they were supposed to be color _keys_ so dunno what this is about w/ white/black for (ok)lch but idk adobe
-          space === 'lch' ? from.lch(...to.lch(chroma('#fff')))
-            : space === 'oklch' ? from.oklch(...to.oklch(chroma('#fff')))
+          // thought they were supposed to be color _keys_ not the actual color so dunno what this is about w/ white/black but idk adobe
+          FULL_SCALE_SPACES.has(space)
+            ? from[space](...to[space](chroma('#fff')))
             : '#ffffff',
           ...sort_colors_by_lightness(xs),
-          space === 'lch' ? from.lch(...to.lch(chroma('#000')))
-            : space === 'oklch' ? from.oklch(...to.oklch(chroma('#000')))
+          FULL_SCALE_SPACES.has(space)
+            ? from[space](...to[space](chroma('#000')))
             : '#000000',
         ]
       : id,
@@ -95,7 +117,7 @@ export function color_scale(granularity, key_colors, color_space, {
             space === 'hcl' ? ([h, c, l]) => [h, map_nan_to_zero(c), l] : id,
             // JCh has some “random” hue for grey colors.
             // Replacing it to NaN, so we can apply the same method of dealing with them.
-            space === 'jch' ? x => (Number.isNaN(chroma(x).hcl()[0]) ? x.with(2, Number.NaN) : x) : id,
+            JCH_COLOR_SPACES.has(space) ? x => (Number.isNaN(chroma(x).hcl()[0]) ? x.with(2, Number.NaN) : x) : id,
           )),
           xs => smooth_scale(xs, domains, space),
         )
@@ -129,12 +151,12 @@ function get_domains(granularity, key_colors, full_scale) {
     return [
       0, 
       ...key_colors
-        .map(key => granularity * (1 - (to.jch(chroma(key))[0] / 100)))
+        .map(key => granularity * (1 - (to.cam02jch(chroma(key))[0] / 100)))
         .sort(numeric)
         .concat(granularity),
       ]
   } else {
-    const lums = key_colors.map(key => to.jch(chroma(key))[0] / 100)
+    const lums = key_colors.map(key => to.cam02jch(chroma(key))[0] / 100)
     const [min, max] = [Math.min(...lums), Math.max(...lums)]
     const d = max - min
 
@@ -169,7 +191,7 @@ function sort_colors_by_lightness(color_strs) {
   // schwartzian transform
   return color_strs
     // convert to hsluv and keep track of original rgb color
-    .map((c, i) => [to.jch(chroma(String(c))), i])
+    .map((c, i) => [to.cam02jch(chroma(String(c))), i])
     // sort by lightness
     .sort((a, b) => b[0][0] - a[0][0])
     // retrieve original rgb color
@@ -184,7 +206,9 @@ const HUE_COLOR_SPACES = new Set(
   'hsl',
   'hsluv',
   'hsv',
-  'jch',
+  'cam02jch',
+  'cam16jch',
+  'hct',
 )
 
 /**
@@ -213,7 +237,7 @@ function smooth_scale(colors, domains, space) {
       if (~i) { return repeat(i)(xs[i]).concat(xs.slice(i)) }
       // all greys case (everything was nan)
                               // hue is not important except for JCh
-      return repeat(xs.length)(to.jch(chroma('#ccc'))[2])
+      return repeat(xs.length)(to.cam02jch(chroma('#ccc'))[2])
     },
     // and likewise set any trailing nans to the last non-nan value
     xs => {
@@ -268,7 +292,7 @@ function smooth_scale(colors, domains, space) {
       }
       return null
     })
-    if (space === 'jch' && typeof ch[1] === 'number') {
+    if ((space === 'cam02jch' || space === 'cam16jch') && typeof ch[1] === 'number') {
       ch[1] = Math.max(0, ch[1])
     }
     return from[space](...ch)

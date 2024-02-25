@@ -1,6 +1,11 @@
-import { jch_to_rgb, rgb_to_jch } from './jch.js'
+/**
+ * CIECAM02
+ */
+
+import { cam02jch_to_rgb, rgb_to_cam02jch } from './cam02_jch.js'
 
 import { pipe } from '../../utils/fn.js'
+import { denormalize_rgb, normalize_rgb } from '../../utils/color.js'
 
 const coefs = { k_l: 1, c1: 0.007, c2: 0.0228 }
 const pi = Math.PI
@@ -30,13 +35,15 @@ export function jab_to_jch([j, a, b]) {
 }
 
 /** @type {(jab: [j: number, a: number, b: number]) => [r: number, g: number, b: number]} */
-export const jab_to_rgb = pipe(
+export const cam02jab_to_rgb = pipe(
   jab_to_jch,
-  jch_to_rgb,
+  cam02jch_to_rgb,
+  denormalize_rgb,
 )
 
 /** @type {(rgb: [r: number, g: number, b: number]) => [j: number, a: number, b: number]} */
-export const rgb_to_jab = pipe(
-  rgb_to_jch,
+export const rgb_to_cam02jab = pipe(
+  normalize_rgb,
+  rgb_to_cam02jch,
   jch_to_jab,
 )

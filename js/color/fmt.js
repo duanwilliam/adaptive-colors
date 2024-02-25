@@ -37,15 +37,12 @@ const ap = (fmts, color) => zip([fmts, color]).map(([f, c]) => f(c))
 
 /**
  * defines how to transform the result of `chroma(color).<colorspace>()` into a valid css string for it
- * @satisfies {Partial<Record<import('./space.js').InternalColorSpace, number[]>> }>}
+ * @satisfies {Partial<Record<import('./space.js').InternalOutputColorSpace, number[]>> }>}
  */
 const COLOR_SPACE_FORMATTERS = {
-  jab:    [val_to_pct, val_to_val, val_to_val],
-  jch:    [val_to_pct, val_to_val, val_to_deg],
   // hex:    'hex', // hex is a string and handled separately
   rgb:    [id, id, id],
   hsl:    [val_to_deg, sca_to_pct, sca_to_pct],
-  hsluv:  [val_to_val, val_to_val, val_to_val],
   lab:    [val_to_pct, val_to_val, val_to_val],
   lch:    [val_to_pct, val_to_val, val_to_deg],
   oklab:  [sca_to_pct, sca_to_sca, sca_to_sca],
@@ -55,7 +52,7 @@ const COLOR_SPACE_FORMATTERS = {
 /**
  * 
  * @param {string} color 
- * @param {import('./space.js').ColorSpace} output_format 
+ * @param {import('./space.js').OutputColorSpace} output_format 
  */
 export function fmt_color(color, output_format) {
   const space = COLOR_SPACES[output_format]

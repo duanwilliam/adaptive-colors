@@ -1,21 +1,39 @@
 export type ColorSpace =
-    | "cam02"
-    | "cam02p"
     | "hex"
     | "rgb"
     | "hsl"
+    | "hsv"
     | "hsluv"
     | "lab"
     | "lch"
     | "oklab"
     | "oklch"
-
-export type InterpolationColorSpace = Extract<ColorSpace,
     | "cam02"
     | "cam02p"
+    | "cam16"
+    | "cam16p"
+    | "hct"
+
+export type InterpolationColorSpace = Extract<ColorSpace,
     | "rgb"
     | "hsl"
+    | "hsv"
     | "hsluv"
+    | "lab"
+    | "lch"
+    | "oklab"
+    | "oklch"
+    | "cam02"
+    | "cam02p"
+    | "cam16"
+    | "cam16p"
+    | "hct"
+>
+
+export type OutputColorSpace = Extract<ColorSpace,
+    | "hex"
+    | "rgb"
+    | "hsl"
     | "lab"
     | "lch"
     | "oklab"
@@ -80,7 +98,7 @@ export class Theme {
         contrast?: number
         saturation?: number | null
         algorithm?: ContrastAlgorithm
-        output_format?: ColorSpace
+        output_format?: OutputColorSpace
     })
 
     get colors(): Color[]
@@ -89,7 +107,7 @@ export class Theme {
     get contrast(): number
     get saturation(): number | null
     get algorithm(): ContrastAlgorithm
-    get output_format(): ColorSpace
+    get output_format(): OutputColorSpace
     get background_color_value(): string
 
     with_colors(colors: Color[]): this
@@ -98,9 +116,9 @@ export class Theme {
     with_contrast(contrast: number): this
     with_saturation(saturation: number | null): this
     with_algorithm(algorithm: ContrastAlgorithm): this
-    with_output_format(fmt: ColorSpace): this
+    with_output_format(fmt: OutputColorSpace): this
 
-    palette(output_format?: ColorSpace): {
+    palette(output_format?: OutputColorSpace): {
         colors: [OutputBackgroundColor, ...OutputColor[]]
         color_pairs: Record<string, string>
         color_values: string[]
@@ -113,7 +131,7 @@ export class Theme {
         contrast: number
         saturation: number | null
         algorithm: ContrastAlgorithm
-        output_format: ColorSpace
+        output_format: OutputColorSpace
         background_color_value: string
     }
     #private
@@ -147,7 +165,7 @@ export function is_positive_ratio(algorithm: ContrastAlgorithm): (r: number) => 
 
 export function min_positive_ratio(ratios: number[], algorithm: ContrastAlgorithm): number
 
-export function fmt_color(color: string, output_format: ColorSpace): string
+export function fmt_color(color: string, output_format: OutputColorSpace): string
 
 export function color_scale<AsFn extends boolean = false>(
     granularity: number,

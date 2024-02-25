@@ -38,7 +38,7 @@ export class Theme {
   #saturation = null
   /** @type {import('./color/contrast.js').ContrastAlgorithm} */
   #algorithm
-  /** @type {import('./color/space.js').ColorSpace} */
+  /** @type {import('./color/space.js').OutputColorSpace} */
   #output_format
 
   /** @type {string[]} */
@@ -66,7 +66,7 @@ export class Theme {
    * contrast         | number                  | 1           | contrast multiplier for all theme colors 
    * saturation       | null | number: [0, 100] | null        | how much to desaturate all theme colors (100 = default saturation; null = don't apply desaturation at all)
    * algorithm        | ContrastAlgorithm       | "wcag3"     | color contrast algorithm
-   * output_format    | ColorSpace              | "rgb"       | color space to output palette colors to 
+   * output_format    | OutputColorSpace        | "rgb"       | color space to output palette colors to 
    * ```
    * 
    * 
@@ -77,7 +77,7 @@ export class Theme {
    *  contrast?: number
    *  saturation?: number | null
    *  algorithm?: import('./color/contrast.js').ContrastAlgorithm
-   *  output_format?: import('./color/space.js').ColorSpace
+   *  output_format?: import('./color/space.js').OutputColorSpace
    * }} opts 
    */
   constructor(opts) {
@@ -164,7 +164,7 @@ export class Theme {
     return this
   }
 
-  /** @param {import('./color/space.js').ColorSpace} fmt */
+  /** @param {import('./color/space.js').OutputColorSpace} fmt */
   with_output_format(fmt) {
     assert(COLOR_SPACES.hasOwnProperty(fmt), `output format "${fmt}" not supported`)
 
@@ -176,7 +176,7 @@ export class Theme {
    * get the color palette given the current theme configuration,
    * in the specified color space (or the theme's specified color space, if not defined).
    * 
-   * @param {import('./color/space.js').ColorSpace} [output_format]
+   * @param {import('./color/space.js').OutputColorSpace} [output_format]
    * 
    * @returns {{
    *  colors: [OutputBackgroundColor, ...OutputColor[]]
@@ -275,7 +275,7 @@ export class Theme {
     this.#algorithm = algorithm
     this.#_invalidate_output()
   }
-  /** @param {import('./color/space.js').ColorSpace} fmt */
+  /** @param {import('./color/space.js').OutputColorSpace} fmt */
   #set_output_format(fmt) {
     this.#output_format = fmt
     this.#_invalidate_output()

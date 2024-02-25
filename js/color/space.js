@@ -21,16 +21,20 @@ governing permissions and limitations under the License.
  * maps color spaces to their corresponding methods on `chroma`
  */
 export const COLOR_SPACES = /**@type{const}*/({
-  "cam02":  'jab',
-  "cam02p": 'jch',
   "hex":    'hex',
   "rgb":    'rgb',
   "hsl":    'hsl',
+  "hsv":    'hsv',
   "hsluv":  'hsluv',
   "lab":    'lab',
   "lch":    'lch',
   "oklab":  'oklab',
   "oklch":  'oklch',
+  "cam02":  'cam02jab',
+  "cam02p": 'cam02jch',
+  "cam16":  'cam16jab',
+  "cam16p": 'cam16jch',
+  'hct':    'hct',
 })
 
 
@@ -45,21 +49,34 @@ function pick(o, ks) {
 }
 
 /**
- * @typedef {Extract<ColorSpace,
- *  | 'cam02'
- *  | 'lab'
- *  | 'hsl'
- *  | 'hsluv'
- *  | 'rgb'
- * >} InterpolationColorSpace
+ * @typedef {keyof typeof INTERPOLATION_COLOR_SPACES} InterpolationColorSpace
  */
 
 export const INTERPOLATION_COLOR_SPACES = pick(COLOR_SPACES, [
-  'cam02',
-  'cam02p',
   'rgb',
   'hsl',
+  'hsv',
   'hsluv',
+  'lab',
+  'lch',
+  'oklab',
+  'oklch',
+  'cam02',
+  'cam02p',
+  'cam16',
+  'cam16p',
+  'hct',
+])
+
+/**
+ * @typedef {keyof typeof OUTPUT_COLOR_SPACES} OutputColorSpace
+ * @typedef {typeof OUTPUT_COLOR_SPACES[OutputColorSpace]} InternalOutputColorSpace
+ */
+
+export const OUTPUT_COLOR_SPACES = pick(COLOR_SPACES, [
+  'hex',
+  'rgb',
+  'hsl',
   'lab',
   'lch',
   'oklab',
