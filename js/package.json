@@ -29,6 +29,9 @@
     "ciecam02": "^0.4.6",
     "hsluv": "^1.0.1"
   },
+  "devDependencies": {
+    "@types/chroma-js": "^2.4.3"
+  },
   "engines": {
     "node": ">=20.0.0"
   },
@@ -40,8 +43,5 @@
     "adaptive colors",
     "color palette",
     "palette generation"
-  ],
-  "devDependencies": {
-    "@types/chroma-js": "^2.4.3"
-  }
+  ]
 }
