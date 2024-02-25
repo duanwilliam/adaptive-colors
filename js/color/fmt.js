@@ -21,10 +21,10 @@ const pct = n => `${n}%`
 const deg = n => `${n}deg`
 
 const sca_to_sca = rnd(2) // scalar to scalar
-const sca_to_pct = pipe(m100, rnd(1), pct) // scalar to percent
-const val_to_pct = pipe(rnd(1), pct) // value to percent
-const val_to_val = rnd(1) // value to value
-const val_to_deg = pipe(rnd(1), deg) // value to degree
+const sca_to_pct = pipe(m100, rnd(0), pct) // scalar to percent
+const val_to_pct = pipe(rnd(0), pct) // value to percent
+const val_to_val = rnd(0) // value to value
+const val_to_deg = pipe(rnd(0), deg) // value to degree
 
 /**
  * @template {Array<import('../utils/fn.js').Fn1<number, number | string>>} Fs
