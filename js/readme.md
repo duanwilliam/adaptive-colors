@@ -14,13 +14,6 @@ tl;dr
 - it doesn't support oklab/oklch
 - why not send in a pr then?  well, sorry Leonardo maintainers, but that code was an absolute horror to read through
 
-adobe's official package for adaptive color palettes is broken, missing support for oklab/oklch, and the code is miserable to work with.
-
-i want to create adaptive color palettes that target oklch.
-i do not want to work within the constraints of their code, and wait all that time for a pr to be accepted (and for the package to get unborked).
-
-rewriting the whole thing lets me create an api that i prefer, _and_ allows for clearer expression of data flow and transformation.
-
 ## installation
 
 this package requires Node `>=20.0.0`.
