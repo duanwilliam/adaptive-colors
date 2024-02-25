@@ -10,6 +10,9 @@ importers:
 
   js:
     dependencies:
+      '@material/material-color-utilities':
+        specifier: ^0.2.7
+        version: 0.2.7
       apca-w3:
         specifier: ^0.1.9
         version: 0.1.9
@@ -31,6 +34,10 @@ importers:
         version: 2.4.3
 
 packages:
+
+  /@material/material-color-utilities@0.2.7:
+    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
+    dev: false
 
   /@types/chroma-js@2.4.3:
     resolution: {integrity: sha512-1ly5ly/7S/YF8aD7MxUQnFOZxdegimuOunJl0xDsLlguu5JrwuSTVGVH3UpIUlh6YauI0RMNT4cqjBonhgbdIQ==}
