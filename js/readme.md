@@ -10,9 +10,12 @@ _"why do this when Adobe's already got Leonardo?"_
 
 tl;dr
 
-- as of writing this, the latest working version of `@adobe/leonardo-contrast-colors` is `1.0.0-alpha.13` (it's currently on `1.0.0-alpha.17`)
+- when it was written, the latest working version of `@adobe/leonardo-contrast-colors` was `1.0.0-alpha.13`, even though version-wise it had reached`1.0.0-alpha.17`
 - it doesn't support oklab/oklch
-- why not send in a pr then?  well, sorry Leonardo maintainers, but that code was an absolute horror to read through
+- why not send in a pr then?
+    - sorry Leonardo maintainers, but that code was an absolute horror to read through - it's hard to track what's going on
+    - this sort of library, which is in large parts pertaining to data transformation, imo lends well to functional programming, so i figured it'd be interesting to explore writing javascript in a much more functional style (unfortunately, limitations in js and ts made getting everything typed well quite unwieldy)
+    - and so sending in a pr would take prohibitively long, if it ever got accepted at all, since what i ended up writing involved a massive paradigmal shift in how the code was written. it also didn't help that adobe's repo was apparently under some sort of refactoring of its own
 
 ## installation
 
